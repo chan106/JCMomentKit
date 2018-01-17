@@ -9,7 +9,6 @@
 #import "YYKit.h"
 #import "SQActionSheetView.h"
 #import <Photos/Photos.h>
-#import "AppDelegate.h"
 
 #define kPadding 20
 #define kHiColor [UIColor colorWithRGBHex:0x2dd6b8]
@@ -852,16 +851,18 @@
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"保存成功" message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *done = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:nil];
                 [alert addAction:done];
-                AppDelegate *appdelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                UIViewController *controller = appdelegate.window.rootViewController;
-                [controller presentViewController:alert animated:YES completion:nil];
+                UIViewController *controller = [UIApplication sharedApplication].keyWindow.rootViewController;
+                if ([controller isKindOfClass:[UIViewController class]]) {
+                    [controller presentViewController:alert animated:YES completion:nil];
+                }
             }else{
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"保存失败" message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *done = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:nil];
                 [alert addAction:done];
-                AppDelegate *appdelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                UIViewController *controller = appdelegate.window.rootViewController;
-                [controller presentViewController:alert animated:YES completion:nil];
+                UIViewController *controller = [UIApplication sharedApplication].keyWindow.rootViewController;
+                if ([controller isKindOfClass:[UIViewController class]]) {
+                    [controller presentViewController:alert animated:YES completion:nil];
+                }
             }
             
         }];
