@@ -11,8 +11,6 @@
 #import "JCMomentLocation.h"
 #import "JCLikeListModel.h"
 #import <YYKit/YYKit.h>
-#import "NSString+YYAdd.h"
-#import "NSAttributedString+YYText.h"
 #import "JCMomentKit.h"
 
 @interface JCMomentsModel ()
