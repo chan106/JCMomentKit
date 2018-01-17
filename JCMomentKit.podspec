@@ -1,6 +1,7 @@
 Pod::Spec.new do |s|
+
   s.name         = 'JCMomentKit'
-  s.version      = '0.0.1'
+  s.version      = ‘0.0.2’
   s.summary      = 'A PYQ of iOS components.'
   s.homepage     = 'https://github.com/chan106/JCMomentKit.git'
   s.license      = 'MIT'
@@ -13,8 +14,9 @@ Pod::Spec.new do |s|
   s.resources    = 'JCMomentKit/**/*.{png,xib}’
 
   s.requires_arc = true
-  s.frameworks = 'Foundation', 'CoreGraphics', 'UIKit'
+  s.frameworks = 'Foundation', 'UIKit'
 
   s.dependency 'YYKit'
   s.dependency 'SDWebImage'
+
 end

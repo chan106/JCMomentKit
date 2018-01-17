@@ -26,4 +26,5 @@
                                                              blue:((s &0xFF))/255.0\
                                                             alpha:1.0]
 
+
 #endif /* JCMomentKit_h */
