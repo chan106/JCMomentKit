@@ -42,7 +42,7 @@
     [self addSubview:_tableView];
     _tableView.dataSource = self;
     _tableView.delegate = self;
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     [_tableView registerNib:[UINib nibWithNibName:@"JCMomentCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"JCMomentCell"];
     _tableView.tableFooterView = [UIView new];
@@ -141,7 +141,7 @@
             
         }
     }
-//    [[NSNotificationCenter defaultCenter] postNotificationName:kNoticeCancelAllEdit object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kNoticeCancelAllEdit object:nil];
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification{
@@ -149,7 +149,8 @@
     NSDictionary *userInfo = [notification userInfo];
     NSValue *value = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
     CGRect keyboardRect = [value CGRectValue];
-    int height = keyboardRect.size.height - 49;
+//    int height = keyboardRect.size.height - 49;//这里弹出有BUG，需要更改
+    int height = keyboardRect.size.height;
     CGFloat time = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
     [_inputView updateFrame:CGRectMake(0, self.frame.size.height - height - kInputViewMinHeight, self.frame.size.width, kInputViewMinHeight) withTime:time];
     _inputView.hidden = NO;
