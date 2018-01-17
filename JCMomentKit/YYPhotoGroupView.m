@@ -7,9 +7,9 @@
 
 #import "YYPhotoGroupView.h"
 #import "YYKit.h"
-//#import "SQActionSheetView.h"
+#import "SQActionSheetView.h"
 #import <Photos/Photos.h>
-//#import "CoreSVP.h"
+#import "AppDelegate.h"
 
 #define kPadding 20
 #define kHiColor [UIColor colorWithRGBHex:0x2dd6b8]
@@ -247,7 +247,7 @@
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, assign) CGPoint panGestureBeginPoint;
 
-//@property (nonatomic, strong) SQActionSheetView *reportSheet;
+@property (nonatomic, strong) SQActionSheetView *reportSheet;
 @property (nonatomic, strong) NSTimer *timer;
 
 @end
@@ -769,36 +769,36 @@
                 CIQRCodeFeature *feature = [features objectAtIndex:0];
                 NSString *scannedResult = feature.messageString;
                 NSLog(@"扫描结果------%@",scannedResult);
-//
-//                if (_reportSheet == nil) {
-//                    _reportSheet = [[SQActionSheetView alloc] initWithTitle:nil
-//                                                                    buttons:@[@"保存图片",@"识别图中二维码",@"取消"]
-//                                                                     colors:@[[UIColor blackColor],[UIColor blackColor],[UIColor blackColor]]
-//                                                                buttonClick:^(SQActionSheetView *sheetView, NSInteger buttonIndex) {
-//                                                                    if (buttonIndex == 0) {
-//                                                                        [weakSelf saveImageToAlbum];
-//                                                                    }else if (buttonIndex == 1){
-//                                                                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:scannedResult]];
-//                                                                    }
-//                                                                }];
-//                }
-//                if (!_reportSheet.superview) {
-//                    [_reportSheet showView];
-//                }
-//            }else{
-//                if (_reportSheet == nil) {
-//                    _reportSheet = [[SQActionSheetView alloc] initWithTitle:nil
-//                                                                    buttons:@[@"保存图片",@"取消"]
-//                                                                     colors:@[[UIColor blackColor],[UIColor blackColor]]
-//                                                                buttonClick:^(SQActionSheetView *sheetView, NSInteger buttonIndex) {
-//                                                                    if (buttonIndex == 0) {
-//                                                                        [weakSelf saveImageToAlbum];
-//                                                                    }
-//                                                                }];
-//                }
-//                if (!_reportSheet.superview) {
-//                    [_reportSheet showView];
-//                }
+
+                if (_reportSheet == nil) {
+                    _reportSheet = [[SQActionSheetView alloc] initWithTitle:nil
+                                                                    buttons:@[@"保存图片",@"识别图中二维码",@"取消"]
+                                                                     colors:@[[UIColor blackColor],[UIColor blackColor],[UIColor blackColor]]
+                                                                buttonClick:^(SQActionSheetView *sheetView, NSInteger buttonIndex) {
+                                                                    if (buttonIndex == 0) {
+                                                                        [weakSelf saveImageToAlbum];
+                                                                    }else if (buttonIndex == 1){
+                                                                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:scannedResult]];
+                                                                    }
+                                                                }];
+                }
+                if (!_reportSheet.superview) {
+                    [_reportSheet showView];
+                }
+            }else{
+                if (_reportSheet == nil) {
+                    _reportSheet = [[SQActionSheetView alloc] initWithTitle:nil
+                                                                    buttons:@[@"保存图片",@"取消"]
+                                                                     colors:@[[UIColor blackColor],[UIColor blackColor]]
+                                                                buttonClick:^(SQActionSheetView *sheetView, NSInteger buttonIndex) {
+                                                                    if (buttonIndex == 0) {
+                                                                        [weakSelf saveImageToAlbum];
+                                                                    }
+                                                                }];
+                }
+                if (!_reportSheet.superview) {
+                    [_reportSheet showView];
+                }
             }
         }else{
             UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:@"扫描结果"
@@ -849,9 +849,19 @@
         } completionHandler:^(BOOL success, NSError * _Nullable error) {
             
             if (success) {
-//                [CoreSVP showSVPWithType:CoreSVPTypeSuccess Msg:@"保存成功" duration:1 allowEdit:NO beginBlock:nil completeBlock:nil];
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"保存成功" message:nil preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *done = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:nil];
+                [alert addAction:done];
+                AppDelegate *appdelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                UIViewController *controller = appdelegate.window.rootViewController;
+                [controller presentViewController:alert animated:YES completion:nil];
             }else{
-//                [CoreSVP showSVPWithType:CoreSVPTypeError Msg:@"保存失败" duration:1 allowEdit:NO beginBlock:nil completeBlock:nil];
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"保存失败" message:nil preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *done = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:nil];
+                [alert addAction:done];
+                AppDelegate *appdelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                UIViewController *controller = appdelegate.window.rootViewController;
+                [controller presentViewController:alert animated:YES completion:nil];
             }
             
         }];
