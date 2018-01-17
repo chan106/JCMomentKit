@@ -36,7 +36,7 @@
         
         _containerToolBar = [[UIView alloc]initWithFrame:(CGRect){0,CGRectGetHeight(self.frame),CGRectGetWidth(self.frame),_toolbarH}];
         _containerToolBar.clipsToBounds = YES;
-        _containerToolBar.backgroundColor = UIColorFromHex(0xf3f4f0);
+        _containerToolBar.backgroundColor = [UIColor colorWithRed:243/256.0 green:244/256.0 blue:240/256.0 alpha:1];
         
         CGFloat buttonMinY = 0;
         

@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 s.name         = 'JCMomentKit'
 s.summary      = 'A PYQ of iOS components.'
-s.version      = '0.0.8'
+s.version      = '0.0.9'
 s.license      = { :type => 'MIT', :file => 'LICENSE' }
 s.authors      = { 'Guo.JC' => 'ji.chan@foxmail.com' }
 
@@ -19,5 +19,6 @@ s.frameworks = 'UIKit','Photos','CoreLocation'
 
 s.dependency 'YYKit'
 s.dependency 'SDWebImage'
+s.dependency 'MJRefresh'
 end
 
