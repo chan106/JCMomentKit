@@ -1,0 +1,27 @@
+/* 
+  Localizable.strings
+  test
+
+  Created by 郭吉成 on 2018/1/18.
+  Copyright © 2018年 KOOSPUR. All rights reserved.
+*/
+"Like" = "Like";
+"Comment" = "Comment";
+"Report" = "Report";
+"Cancel" = "Cancel";
+"OK" = "OK";
+"Vulagar" = "Vulagar";
+"ViolentAndPornographic" = "Violent And Pornographic";
+"Personal Attack" = "Personal Attack";
+"Advertisement" = "Advertisement";
+"LawsAndRules" = "Laws And Rules";
+"SaveImage" = "Save Image";
+"SaveSuccess" = "Save Success";
+"SaveFail" = "Save Fail";
+"Reply" = "Reply";
+"IdentifyTheQrCode" = "Identify The QR Code";
+"ReadAll" = "Read All";
+"PackUp" = "Pack Up";
+"LocationAcquisition" = "Location Acquisition...";
+"LongImage" = "Long";
+"Send" = "Send";

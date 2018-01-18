@@ -9,14 +9,16 @@
 #import "JCMomentCommentInputView.h"
 #import "YYKit.h"
 #import "JCMomentKit.h"
+#import "NSBundle+JCMoment.h"
 
 @interface JCMomentCommentInputView()<YYTextViewDelegate>
 
-@property (weak, nonatomic) IBOutlet YYTextView *inputView;
-@property (weak, nonatomic) IBOutlet UIButton *sendButton;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *inputViewWidth;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *inputViewHeight;
+@property (strong, nonatomic) YYTextView *inputView;
+@property (strong, nonatomic) UIButton *sendButton;
 @property (assign, nonatomic) CGRect tempFrame;
+@property (nonatomic, strong) UIColor *sendButtonBackColor;
+@property (nonatomic, strong) UIColor *sendButtonTinColor;
+@property (nonatomic, strong) UIColor *sendButtonBorderColor;
 
 @end
 
@@ -29,20 +31,32 @@
     [super drawRect:rect];
 }
 
+- (instancetype)initWithFrame:(CGRect)frame{
+    if (self = [super initWithFrame:frame]) {
+        [self initCodeForFrame:frame];
+    }
+    return self;
+}
+
 - (void)updateFrame:(CGRect)frame withTime:(CGFloat) time{
-    _inputViewWidth.constant = frame.size.width - 85;
-    _inputViewHeight.constant = frame.size.height - 16;
     [UIView animateKeyframesWithDuration:time delay:0 options:UIViewKeyframeAnimationOptionCalculationModePaced animations:^{
         self.frame = frame;
-        [self layoutIfNeeded];
+        _inputView.frame = CGRectMake(15, 8, frame.size.width - 85, frame.size.height - 16);
+        _sendButton.frame = CGRectMake(15 + _inputView.frame.size.width + 10, 8, 50, 40);
     } completion:^(BOOL finished) {
         
     }];
     _tempFrame = frame;
 }
 
-- (void)awakeFromNib{
-    [super awakeFromNib];
+- (void)initCodeForFrame:(CGRect) frame{
+    
+    self.backgroundColor = MomentColorFromHex(0xf0f0f0);
+    _sendButtonBackColor = [UIColor yellowColor];
+    _sendButtonTinColor = MomentColorFromHex(0x999999);
+    _sendButtonBorderColor = MomentColorFromHex(0xcccccc);
+    
+    _inputView = [[YYTextView alloc] initWithFrame:CGRectMake(15, 8, frame.size.width - 85, frame.size.height - 16)];
     _inputView.layer.cornerRadius = 3;
     _inputView.layer.masksToBounds = YES;
     _inputView.layer.borderColor = MomentColorFromHex(0xcccccc).CGColor;
@@ -55,14 +69,51 @@
     _inputView.delegate = self;
     _inputView.returnKeyType = UIReturnKeySend;
     _inputView.enablesReturnKeyAutomatically = YES;
+    [self addSubview:_inputView];
     
+    _sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _sendButton.frame = CGRectMake(15 + _inputView.frame.size.width + 10, 8, 50, 40);
+    _sendButton.titleLabel.font = [UIFont systemFontOfSize:15];
+    _sendButton.backgroundColor = _sendButtonBackColor;
     _sendButton.layer.cornerRadius = 3;
     _sendButton.layer.masksToBounds = YES;
-    _sendButton.layer.borderColor = MomentColorFromHex(0xcccccc).CGColor;
+    _sendButton.layer.borderColor = _sendButtonBorderColor.CGColor;
     _sendButton.layer.borderWidth = 0.5;
     _sendButton.backgroundColor = [UIColor clearColor];
     _sendButton.enabled = NO;
-    [_sendButton setTitleColor:MomentColorFromHex(0x999999) forState:UIControlStateNormal];
+    [_sendButton setTitleColor:_sendButtonTinColor forState:UIControlStateNormal];
+    [_sendButton setTitle:[NSBundle JCLocalizedStringForKey:@"Send"] forState:UIControlStateNormal];
+    [self addSubview:_sendButton];
+}
+
+- (void)sendButtonBackColor:(UIColor *) backColor
+                   tinColor:(UIColor *) tinColor
+                borderColor:(UIColor *) borderColor{
+    
+    _sendButtonTinColor = tinColor;
+    _sendButtonBackColor = backColor;
+    _sendButtonBorderColor = borderColor;
+    
+    _sendButton.layer.borderColor = borderColor.CGColor;
+    if ([_inputView.text isEqualToString:@""]) {
+        _sendButton.layer.borderWidth = 0.5;
+        _sendButton.backgroundColor = [UIColor clearColor];
+        _sendButton.enabled = NO;
+        [_sendButton setTitleColor:MomentColorFromHex(0xcccccc) forState:UIControlStateNormal];
+    }else{
+        _sendButton.layer.borderWidth = 0;
+        _sendButton.enabled = YES;
+        _sendButton.backgroundColor = _sendButtonBackColor;
+        [_sendButton setTitleColor:_sendButtonTinColor forState:UIControlStateNormal];
+    }
+}
+
+- (void)inputViewBorderColor:(UIColor *)inputBorderColor
+              placeholdColor:(UIColor *)placeholdColor
+                   textColor:(UIColor *)textColor{
+    _inputView.layer.borderColor = inputBorderColor.CGColor;
+    _inputView.placeholderTextColor = placeholdColor;
+    _inputView.textColor = textColor;
 }
 
 - (void)editState:(BOOL)editState{
@@ -79,12 +130,12 @@
         _sendButton.layer.borderWidth = 0.5;
         _sendButton.backgroundColor = [UIColor clearColor];
         _sendButton.enabled = NO;
-        [_sendButton setTitleColor:MomentColorFromHex(0x999999) forState:UIControlStateNormal];
+        [_sendButton setTitleColor:MomentColorFromHex(0xcccccc) forState:UIControlStateNormal];
     }else{
         _sendButton.layer.borderWidth = 0;
         _sendButton.enabled = YES;
-        _sendButton.backgroundColor = MomentColorFromHex(0xec6c00);
-        [_sendButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _sendButton.backgroundColor = _sendButtonBackColor;
+        [_sendButton setTitleColor:_sendButtonTinColor forState:UIControlStateNormal];
     }
     
     YYTextLayout *layout = textView.textLayout;
@@ -92,8 +143,8 @@
     height = MAX(18+height, kInputViewMinHeight);
     CGRect frame = self.frame;
     frame.size.height = height;
-//    frame.origin.y -= (height - frame.size.height);
-    _inputViewHeight.constant = frame.size.height - 16;
+    _inputView.frame = CGRectMake(15, 8, frame.size.width - 85, frame.size.height - 16);
+    _sendButton.frame = CGRectMake(15 + _inputView.frame.size.width + 10, height - 48, 50, 40);
     if (_tempFrame.size.height != frame.size.height) {
         CGFloat temp = frame.size.height - _tempFrame.size.height;
         frame.origin.y =(_tempFrame.origin.y - temp);

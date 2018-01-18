@@ -12,24 +12,33 @@
 #import "JCLikeListModel.h"
 #import <YYKit/YYKit.h>
 #import "JCMomentKit.h"
+#import "NSBundle+JCMoment.h"
 
 @interface JCMomentsModel ()
+
+@property (nonatomic, strong) UIColor *nameColor;
+@property (nonatomic, strong) UIColor *contentColor;
 
 @end
 
 @implementation JCMomentsModel
 
 /**
- 创建帖子数据模型
+ @bref 创建帖子数据模型
  @param         sourceArray         源数据，网络请求回来的数组
  @return                            解析好的数组模型
  */
 + (NSArray <JCMomentsModel *> *)creatModelWithArray:(NSArray <NSDictionary *> *)sourceArray
                                       currentUserID:(NSString *)currentUserID
-                                    currentUserName:(NSString *)currentUserName{
+                                    currentUserName:(NSString *)currentUserName
+                                          nameColor:(UIColor *)nameColor
+                                       contentColor:(UIColor *)contentColor{
+    
     NSMutableArray *modelArray = [NSMutableArray array];
     for (NSDictionary *sourceDic in sourceArray) {
         JCMomentsModel *model = [JCMomentsModel new];
+        model.nameColor = nameColor?nameColor:kNickNameColor;
+        model.contentColor = contentColor?contentColor:kMomentTextColor;
         model.userName = [NSString checkIfNullWithString:sourceDic[@"UserName"]];
         model.currentUserID = currentUserID;
         model.currentUserName = currentUserName;
@@ -46,7 +55,10 @@
         model.isLike = [NSString checkIfNullWithString:sourceDic[@"IsLiked"]].boolValue;
         model.isHandpicked = [[NSString checkIfNullWithString:sourceDic[@"Feature"]] boolValue];
         model.views = [NSString checkIfNullWithString:sourceDic[@"Views"]].integerValue;
-        model.responseList = [JCMomentResponseModel creatModelWithArray:sourceDic[@"ResponseList"] momentModel:model];
+        model.responseList = [JCMomentResponseModel creatModelWithArray:sourceDic[@"ResponseList"]
+                                                            momentModel:model
+                                                              nameColor:model.nameColor
+                                                           contentColor:model.contentColor];
         model.subName = [NSString checkIfNullWithString:sourceDic[@"UserTypeName"]];
         model.vLevelType = [[NSString checkIfNullWithString:sourceDic[@"UserType"]] integerValue];
         model.vImageURL = [NSString checkIfNullWithString:sourceDic[@"VUrl"]];
@@ -230,11 +242,17 @@
     }
     
     UIImage *image = [UIImage imageNamed:@"find_like_list.png"];
-    NSMutableAttributedString *attachText= [NSMutableAttributedString attachmentStringWithContent:image contentMode:UIViewContentModeCenter attachmentSize:CGSizeMake(1.5*kTextFont, kTextFont) alignToFont:[UIFont systemFontOfSize:kTextFont] alignment:YYTextVerticalAlignmentCenter];
+    NSMutableAttributedString *attachText =
+    [NSMutableAttributedString attachmentStringWithContent:image
+                                               contentMode:UIViewContentModeCenter
+                                            attachmentSize:CGSizeMake(1.5*kTextFont, kTextFont)
+                                               alignToFont:[UIFont systemFontOfSize:kTextFont]
+                                                 alignment:YYTextVerticalAlignmentCenter];
     allLikeListText = [[NSMutableAttributedString alloc] initWithAttributedString:attachText];
     [allLikeListText appendString:[NSString stringWithFormat:@" %@",userNameLink]];
     allLikeListText.lineSpacing = 2;
     allLikeListText.font = [UIFont boldSystemFontOfSize:kTextFont];
+    allLikeListText.color = self.contentColor;
     
     //计算出高度
     YYLabel *label = [[YYLabel alloc] initWithFrame:CGRectMake(0, 0, kLikeListWidth, CGFLOAT_MAX)];
@@ -267,7 +285,7 @@
             }
             ///点赞人的点击事件
             [allLikeListText setTextHighlightRange:range
-                                             color:kLIkeListColor
+                                             color:self.nameColor
                                    backgroundColor:[UIColor grayColor]
                                          tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
                                              [[NSNotificationCenter defaultCenter] postNotificationName:kNoticeWatchUserInfo object:nil userInfo:@{@"userID":_likeList[i].userID}];
@@ -398,7 +416,12 @@
 
 
 
+@interface JCMomentResponseModel ()
 
+@property (nonatomic, strong) UIColor *nameColor;
+@property (nonatomic, strong) UIColor *contentColor;
+
+@end
 
 @implementation JCMomentResponseModel
 
@@ -408,10 +431,15 @@
  @param         momentModel         帖子数据模型
  @return                            解析好的数组模型
  */
-+ (NSMutableArray <JCMomentResponseModel *> *)creatModelWithArray:(NSArray <NSDictionary *> *)sourceArray momentModel:(JCMomentsModel *)momentModel{
++ (NSMutableArray <JCMomentResponseModel *> *)creatModelWithArray:(NSArray <NSDictionary *> *)sourceArray
+                                                      momentModel:(JCMomentsModel *)momentModel
+                                                        nameColor:(UIColor *)nameColor
+                                                     contentColor:(UIColor *)contentColor{
     NSMutableArray *array = [NSMutableArray array];
     for (NSDictionary *sourceDic in sourceArray) {
         JCMomentResponseModel *model = [JCMomentResponseModel new];
+        model.nameColor = nameColor?nameColor:kNickNameColor;
+        model.contentColor = contentColor?contentColor:kMomentTextColor;
         model.momentModel = momentModel;
         model.postID = [NSString checkIfNullWithString:sourceDic[@"PostID"]];
         model.responseID = [NSString checkIfNullWithString:sourceDic[@"RID"]];
@@ -441,13 +469,13 @@
         text  = [[NSMutableAttributedString alloc] initWithString:[userNameLink stringByAppendingString:commentText]];
     }else{
         ///是一条回复
-        userNameLink = [NSString stringWithFormat:@"%@回复%@: ",self.rUserName,self.quote.userName];
+        userNameLink = [NSString stringWithFormat:@"%@%@%@: ",self.rUserName,[NSBundle JCLocalizedStringForKey:@"Reply"],self.quote.userName];
         commentText = self.text;
         text  = [[NSMutableAttributedString alloc] initWithString:[userNameLink stringByAppendingString:commentText]];
     }
     text.lineSpacing = 2;
     text.font = [UIFont systemFontOfSize:kTextFont];
-    text.color = [UIColor darkTextColor];
+    text.color = self.contentColor;
     [text addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:kTextFont] range:NSMakeRange(0, self.rUserName.length)];
     [text addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:kTextFont] range:NSMakeRange(self.rUserName.length+2, self.quote.userName.length)];
     self.commentString = text;
@@ -456,7 +484,7 @@
     if (self.quote == nil) {
         ///是一条评论
         [self.commentString setTextHighlightRange:NSMakeRange(0, self.rUserName.length)
-                                             color:kCommentListColor
+                                            color:self.nameColor
                                    backgroundColor:[UIColor grayColor]
                                          tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
                                              [[NSNotificationCenter defaultCenter] postNotificationName:kNoticeWatchUserInfo object:nil userInfo:@{@"userID":weakSelf.rUserID}];
@@ -464,13 +492,13 @@
     }else{
         ///是一条回复
         [self.commentString setTextHighlightRange:NSMakeRange(0, self.rUserName.length)
-                                             color:kCommentListColor
+                                             color:self.nameColor
                                    backgroundColor:[UIColor grayColor]
                                          tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
                                              [[NSNotificationCenter defaultCenter] postNotificationName:kNoticeWatchUserInfo object:nil userInfo:@{@"userID":weakSelf.rUserID}];
                                          }];
         [self.commentString setTextHighlightRange:NSMakeRange(self.rUserName.length+2, self.quote.userName.length)
-                                             color:kCommentListColor
+                                             color:self.nameColor
                                    backgroundColor:[UIColor grayColor]
                                          tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
                                              [[NSNotificationCenter defaultCenter] postNotificationName:kNoticeWatchUserInfo object:nil userInfo:@{@"userID":weakSelf.quote.userID}];
@@ -494,13 +522,17 @@
                                             postID:(NSString *)postID
                                         responseID:(NSString *)responseID
                                      currentUserID:(NSString *)currentUserID
-                                   currentUserName:(NSString *)currentUserName{
+                                   currentUserName:(NSString *)currentUserName
+                                         nameColor:(UIColor *)nameColor
+                                      contentColor:(UIColor *)contentColor{
     JCMomentResponseModel *model = [JCMomentResponseModel new];
     model.text = text;
     model.postID = postID;
     model.responseID = responseID;
     model.rUserID = currentUserID;
     model.rUserName = currentUserName;
+    model.nameColor = nameColor?:kNickNameColor;
+    model.contentColor = contentColor?contentColor:kMomentTextColor;
     [model caucalCommentHeight];
     return model;
 }

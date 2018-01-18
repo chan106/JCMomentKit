@@ -21,6 +21,8 @@
 #import "JCMomentLocation.h"
 #import "JCMomentCommentInputView.h"
 
+#define         kJCMomentScreenHeight       [UIScreen mainScreen].bounds.size.height
+#define         kJCMomentScreenWidth        [UIScreen mainScreen].bounds.size.width
 #define         MomentColorFromHex(s)       [UIColor colorWithRed:(((s & 0xFF0000) >> 16))/255.0\
                                                             green:(((s &0xFF00) >>8))/255.0\
                                                              blue:((s &0xFF))/255.0\

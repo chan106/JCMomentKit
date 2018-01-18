@@ -40,7 +40,7 @@ static JCMomentLocation *_manager;
 // 开始定位
 - (void)startLocation {
     if ([CLLocationManager locationServicesEnabled]) {
-        NSLog(@"-------->开始定位");
+//        NSLog(@"-------->开始定位");
         self.locationManager = [[CLLocationManager alloc]init];
         self.locationManager.delegate = self;
         //控制定位精度,越高耗电量越大
@@ -50,7 +50,7 @@ static JCMomentLocation *_manager;
         self.locationManager.distanceFilter = 10.0f;
         [self.locationManager startUpdatingLocation];
     }else {
-        NSLog(@"-------->定位服务无法使用");
+//        NSLog(@"-------->定位服务无法使用");
         if (self.getLocationBlock) {
             self.getLocationBlock(nil, [NSError errorWithDomain:@"定位服务无法使用" code:-1 userInfo:nil]);
             self.getLocationBlock = nil;
@@ -61,10 +61,10 @@ static JCMomentLocation *_manager;
 #pragma mark - 回调代理
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
     if ([error code] == kCLErrorDenied) {
-        NSLog(@"访问被拒绝");
+//        NSLog(@"访问被拒绝");
     }
     if ([error code] == kCLErrorLocationUnknown) {
-        NSLog(@"无法获取位置信息");
+//        NSLog(@"无法获取位置信息");
     }
     [self stopLocation];
     if (self.getLocationBlock) {
@@ -96,16 +96,16 @@ static JCMomentLocation *_manager;
                 city = placemark.administrativeArea;
                 self.locationStr = city;
             }
-            NSLog(@"city = %@  %@", city, placemark.administrativeArea);
+//            NSLog(@"city = %@  %@", city, placemark.administrativeArea);
             self.locationStr = [NSString stringWithFormat:@"%@%@",placemark.administrativeArea,city];
         }
         else if (error == nil && [array count] == 0)
         {
-            NSLog(@"No results were returned.");
+//            NSLog(@"No results were returned.");
         }
         else if (error != nil)
         {
-            NSLog(@"An error occurred = %@", error);
+//            NSLog(@"An error occurred = %@", error);
         }
     }];
     //系统会一直更新数据，直到选择停止更新，因为我们只需要获得一次经纬度即可，所以获取之后就停止更新
@@ -130,7 +130,7 @@ static JCMomentLocation *_manager;
         NSString *address;
         // 错误处理
         if (error || placemarks == nil || [placemarks count] == 0) {
-            NSLog(@"反地理编码错误");
+//            NSLog(@"反地理编码错误");
             address = @"";
         }else{
             // CLPlacemark 地标对象 包含CLLocation 位置对象 还有 街道 国家 行政区域描述信息

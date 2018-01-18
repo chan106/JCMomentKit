@@ -17,7 +17,7 @@
 
 /**
  点击事件代理
- @params    momentCell
+ @params    momentCell       Cell
  @params    actionType       点击类型
  @params    momentModel      数据模型
  */
@@ -30,6 +30,17 @@
 
 @interface JCMomentCell : UITableViewCell
 
+@property (nonatomic, strong) UIImage *commentBackImage;
+@property (nonatomic, strong) UIColor *nameColor;
+@property (nonatomic, strong) UIColor *textColor;
+@property (nonatomic, strong) UIColor *watchMoreButtonColor;
+@property (nonatomic, strong) UIColor *addressColor;
+@property (nonatomic, strong) UIColor *timeColor;
+@property (nonatomic, strong) UIColor *viewColor;
+@property (nonatomic, strong) UIColor *headerLayerColor;
+@property (nonatomic, assign) CGFloat headerborderWidth;
+@property (nonatomic, strong) UIColor *commentCutLineBackColor;
+
 @property (nonatomic, copy) void(^clickVideoBlock)(NSURL *videoURL);
 /**
  赋予数据
@@ -39,6 +50,8 @@
  */
 - (void)setModel:(JCMomentsModel *)model
        indexPath:(NSIndexPath *)indexPath
-        delegate:(id<JCMomentCellDelegate>)delegate;
+        delegate:(id<JCMomentCellDelegate>)delegate
+headerPlaceholdImage:(UIImage *)headerPlaceholdImage
+momentPlaceholdImage:(UIImage *)momentPlaceholdImage;
 
 @end

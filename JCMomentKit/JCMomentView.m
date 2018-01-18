@@ -42,21 +42,22 @@
     [self addSubview:_tableView];
     _tableView.dataSource = self;
     _tableView.delegate = self;
-//    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _tableView.backgroundColor = [UIColor clearColor];
     _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
-    [_tableView registerNib:[UINib nibWithNibName:@"JCMomentCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"JCMomentCell"];
+    NSBundle *xibBundle = [NSBundle bundleForClass:[self class]];
+    [_tableView registerNib:[UINib nibWithNibName:@"JCMomentCell" bundle:xibBundle] forCellReuseIdentifier:@"JCMomentCell"];
     _tableView.tableFooterView = [UIView new];
     _tableView.estimatedRowHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
     _tableView.estimatedSectionFooterHeight = 0;
     
-    _inputView = [[UINib nibWithNibName:@"JCMomentCommentInputView" bundle:[NSBundle mainBundle]] instantiateWithOwner:self options:nil].firstObject;
-    [_inputView updateFrame:CGRectMake(0, 0, self.frame.size.width, kInputViewMinHeight) withTime:0.3];
-    _inputView.hidden = YES;
-    [self addSubview:_inputView];
-    
     [self addNotice];
     [self addRefresh];
+}
+
+- (void)setSeparatorColor:(UIColor *)separatorColor{
+    _separatorColor = separatorColor;
+    _tableView.separatorColor = separatorColor;
 }
 
 - (void)layoutSubviews{
@@ -67,6 +68,11 @@
 - (void)drawRect:(CGRect)rect{
     [super drawRect:rect];
     _tableView.frame = self.bounds;
+    if (_inputView == nil) {
+        _inputView = [[JCMomentCommentInputView alloc] initWithFrame:CGRectMake(0, kJCMomentScreenHeight, self.frame.size.width, kInputViewMinHeight)];
+        [_inputView sendButtonBackColor:_sendButtonBackColor tinColor:_sendButtonTinColor borderColor:_sendButtonBorderColor];
+        [[UIApplication sharedApplication].keyWindow addSubview:_inputView];
+    }
 }
 
 /**
@@ -152,8 +158,7 @@
 //    int height = keyboardRect.size.height - 49;//这里弹出有BUG，需要更改
     int height = keyboardRect.size.height;
     CGFloat time = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-    [_inputView updateFrame:CGRectMake(0, self.frame.size.height - height - kInputViewMinHeight, self.frame.size.width, kInputViewMinHeight) withTime:time];
-    _inputView.hidden = NO;
+    [_inputView updateFrame:CGRectMake(0, kJCMomentScreenHeight - height - kInputViewMinHeight, self.frame.size.width, kInputViewMinHeight) withTime:time];
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification{
@@ -163,9 +168,8 @@
     CGRect keyboardRect = [value CGRectValue];
     int height = keyboardRect.size.height;
     CGFloat time = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-    [_inputView updateFrame:CGRectMake(0, self.frame.size.height, self.frame.size.width, kInputViewMinHeight)
+    [_inputView updateFrame:CGRectMake(0, kJCMomentScreenHeight, self.frame.size.width, kInputViewMinHeight)
                    withTime:time];
-    _inputView.hidden = YES;
 }
 
 - (void)deleteMoment:(JCMomentsModel *)deleteMoment{
@@ -211,7 +215,11 @@
                 commentContent:(NSString *) commentContent{
     JCMomentResponseModel *newComment = [JCMomentResponseModel creatNewCommentWithText:commentContent
                                                                                 postID:moment.topicID
-                                                                            responseID:responseID currentUserID:moment.currentUserID currentUserName:moment.currentUserName];
+                                                                            responseID:responseID
+                                                                         currentUserID:moment.currentUserID
+                                                                       currentUserName:moment.currentUserName
+                                                                             nameColor:self.nameColor
+                                                                          contentColor:self.textColor];
     [moment addCommentModel:newComment];
     [_tableView reloadData];
 }
@@ -241,8 +249,20 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     JCMomentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"JCMomentCell" forIndexPath:indexPath];
     JCMomentsModel *model = _momentModels[indexPath.row];
-    [cell setModel:model indexPath:indexPath delegate:self];
+    [cell setModel:model indexPath:indexPath delegate:self headerPlaceholdImage:_headerPlaceholdImage momentPlaceholdImage:_momentPlaceholdImage];
     cell.clickVideoBlock = _clickVideoBlock;
+    cell.commentBackImage = _commentBackImage;
+    cell.nameColor = _nameColor;
+    cell.textColor = _textColor;
+    cell.watchMoreButtonColor = _watchMoreButtonColor;
+    cell.addressColor = _addressColor;
+    cell.timeColor = _timeColor;
+    cell.viewColor = _viewColor;
+    cell.headerLayerColor = _headerLayerColor;
+    cell.headerborderWidth = _headerborderWidth;
+    cell.timeColor = _timeColor;
+    cell.viewColor = _viewColor;
+    cell.commentCutLineBackColor = _separatorColor;
     return cell;
 }
 
@@ -303,7 +323,6 @@
     }else if (actionType == MomentTapActionTypeReplayComment){
 //        回复评论
         [_inputView editState:YES];
-        [_inputView editState:YES];
         NSString *placeHold = [NSString stringWithFormat:@"@%@",momentModel.responseList[responseIndex.row].rUserName];
         [_inputView setPlaceHoldString:placeHold];
         _inputView.inputComplete = ^(NSString *inputString) {
@@ -345,6 +364,7 @@
 }
 
 - (void)dealloc{
+    [_inputView removeFromSuperview];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

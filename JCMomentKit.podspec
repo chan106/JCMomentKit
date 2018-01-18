@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 s.name         = 'JCMomentKit'
 s.summary      = 'A PYQ of iOS components.'
-s.version      = '0.1.0'
+s.version      = '1.0.0'
 s.license      = { :type => 'MIT', :file => 'LICENSE' }
 s.authors      = { 'Guo.JC' => 'ji.chan@foxmail.com' }
 
@@ -12,7 +12,7 @@ s.source       = { :git => 'https://github.com/chan106/JCMomentKit.git', :tag =>
 
 s.requires_arc = true
 s.source_files = 'JCMomentKit/**/*.{h,m}'
-s.resources    = 'JCMomentKit/**/*.{png,xib,bundle}'
+s.resources    = 'JCMomentKit/**/*.{png,xib,bundle,lproj}'
 
 s.requires_arc = true
 s.frameworks = 'UIKit','Photos','CoreLocation'

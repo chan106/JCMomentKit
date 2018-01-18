@@ -9,6 +9,7 @@
 #import "YYKit.h"
 #import "SQActionSheetView.h"
 #import <Photos/Photos.h>
+#import "NSBundle+JCMoment.h"
 
 #define kPadding 20
 #define kHiColor [UIColor colorWithRGBHex:0x2dd6b8]
@@ -771,7 +772,7 @@
 
                 if (_reportSheet == nil) {
                     _reportSheet = [[SQActionSheetView alloc] initWithTitle:nil
-                                                                    buttons:@[@"保存图片",@"识别图中二维码",@"取消"]
+                                                                    buttons:@[[NSBundle JCLocalizedStringForKey:@"SaveImage"],[NSBundle JCLocalizedStringForKey:@"IdentifyTheQrCode"],[NSBundle JCLocalizedStringForKey:@"Cancel"]]
                                                                      colors:@[[UIColor blackColor],[UIColor blackColor],[UIColor blackColor]]
                                                                 buttonClick:^(SQActionSheetView *sheetView, NSInteger buttonIndex) {
                                                                     if (buttonIndex == 0) {
@@ -787,7 +788,7 @@
             }else{
                 if (_reportSheet == nil) {
                     _reportSheet = [[SQActionSheetView alloc] initWithTitle:nil
-                                                                    buttons:@[@"保存图片",@"取消"]
+                                                                    buttons:@[[NSBundle JCLocalizedStringForKey:@"SaveImage"],[NSBundle JCLocalizedStringForKey:@"Cancel"]]
                                                                      colors:@[[UIColor blackColor],[UIColor blackColor]]
                                                                 buttonClick:^(SQActionSheetView *sheetView, NSInteger buttonIndex) {
                                                                     if (buttonIndex == 0) {
@@ -803,7 +804,7 @@
             UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:@"扫描结果"
                                                                message:@"您还没有生成二维码"
                                                               delegate:nil
-                                                     cancelButtonTitle:@"确定"
+                                                     cancelButtonTitle:[NSBundle JCLocalizedStringForKey:@"OK"]
                                                      otherButtonTitles:nil,nil];
             [alertView show];
         }
@@ -846,25 +847,23 @@
             PHAssetChangeRequest *req = [PHAssetChangeRequest creationRequestForAssetFromImage:tile.imageView.image];
             
         } completionHandler:^(BOOL success, NSError * _Nullable error) {
-            
-            if (success) {
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"保存成功" message:nil preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *done = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:nil];
-                [alert addAction:done];
-                UIViewController *controller = [UIApplication sharedApplication].keyWindow.rootViewController;
-                if ([controller isKindOfClass:[UIViewController class]]) {
-                    [controller presentViewController:alert animated:YES completion:nil];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (success) {
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[NSBundle JCLocalizedStringForKey:@"SaveSuccess"]
+                                                                        message:nil
+                                                                       delegate:nil
+                                                              cancelButtonTitle:[NSBundle JCLocalizedStringForKey:@"OK"]
+                                                              otherButtonTitles:nil];
+                    [alertView show];
+                }else{
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[NSBundle JCLocalizedStringForKey:@"SaveFail"]
+                                                                        message:nil
+                                                                       delegate:nil
+                                                              cancelButtonTitle:[NSBundle JCLocalizedStringForKey:@"OK"]
+                                                              otherButtonTitles:nil];
+                    [alertView show];
                 }
-            }else{
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"保存失败" message:nil preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *done = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:nil];
-                [alert addAction:done];
-                UIViewController *controller = [UIApplication sharedApplication].keyWindow.rootViewController;
-                if ([controller isKindOfClass:[UIViewController class]]) {
-                    [controller presentViewController:alert animated:YES completion:nil];
-                }
-            }
-            
+            });
         }];
     });
 }

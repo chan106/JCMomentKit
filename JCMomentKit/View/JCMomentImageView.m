@@ -12,6 +12,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "YYPhotoGroupView.h"
 #import <YYKit/YYImage.h>
+#import "NSBundle+JCMoment.h"
 
 @interface JCMomentImageView ()
 
@@ -19,6 +20,7 @@
 @property (nonatomic , strong) NSMutableArray <UIImageView *> *imageViewArray;
 @property (nonatomic , strong) NSMutableArray <UILabel *> *tipLabelArray;
 @property (nonatomic , strong) UIImageView *videoCover;
+@property (nonatomic , strong) UIImage *placeHoldImage;
 
 @end
 
@@ -49,7 +51,7 @@
             tipLabel.textColor = [UIColor whiteColor];
             tipLabel.font = [UIFont systemFontOfSize:12];
             tipLabel.textAlignment = NSTextAlignmentRight;
-            tipLabel.text = @"长图";
+            tipLabel.text = [NSBundle JCLocalizedStringForKey:@"LongImage"];
             [tipLabel sizeToFit];
             tipLabel.hidden = YES;
             tipLabel.tag = i;
@@ -73,8 +75,9 @@
     }
 }
 
-- (void)setModelData:(JCMomentsModel *)model{
+- (void)setModelData:(JCMomentsModel *)model placeHoldImage:(UIImage *)placeHoldImage{
     _model = model;
+    _placeHoldImage = placeHoldImage;
     [self initCode];
     if (model.videoURL != nil && ![model.videoURL isEqualToString:@""]) {
         //视频
@@ -109,7 +112,7 @@
             UILabel *tipLabel = _tipLabelArray[0];
             if (model.isLongImage) {
                 tipLabel.hidden = NO;
-                tipLabel.text = @"长图";
+                tipLabel.text = [NSBundle JCLocalizedStringForKey:@"LongImage"];
                 [tipLabel sizeToFit];
             }else if ([urlString containsString:@"gif"]) {
                 tipLabel.hidden = NO;
@@ -223,7 +226,7 @@
 
 - (void)setImageView:(UIImageView *)imageView imageUrl:(NSURL *)url{
     [imageView sd_setImageWithURL:url
-                 placeholderImage:[UIImage imageNamed:@"placehold_image"]
+                 placeholderImage:_placeHoldImage?_placeHoldImage:[UIImage imageNamed:@"placehold_image.png"]
                         completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
         
                         }];

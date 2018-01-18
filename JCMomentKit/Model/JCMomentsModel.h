@@ -87,9 +87,11 @@ typedef NS_ENUM(NSInteger, VLevelType) {
  @param         sourceArray         源数据，网络请求回来的数组
  @return                            解析好的数组模型
  */
-+ (NSArray <JCMomentsModel *> *)creatModelWithArray:(NSArray <NSDictionary *> *)sourceArray
-                                      currentUserID:(NSString *)currentUserID
-                                    currentUserName:(NSString *)currentUserName;
++ (NSArray <JCMomentsModel *> *)creatModelWithArray:(NSArray <NSDictionary *> *) sourceArray
+                                      currentUserID:(NSString *) currentUserID
+                                    currentUserName:(NSString *) currentUserName
+                                          nameColor:(UIColor *) nameColor
+                                       contentColor:(UIColor *) contentColor;
 
 /**
  计算label显示需要的高度
@@ -164,7 +166,10 @@ typedef NS_ENUM(NSInteger, VLevelType) {
  @param         momentModel         帖子数据模型
  @return                            解析好的数组模型
  */
-+ (NSMutableArray <JCMomentResponseModel *> *)creatModelWithArray:(NSArray <NSDictionary *> *)sourceArray momentModel:(JCMomentsModel *)momentModel;
++ (NSMutableArray <JCMomentResponseModel *> *)creatModelWithArray:(NSArray <NSDictionary *> *)sourceArray
+                                                      momentModel:(JCMomentsModel *)momentModel
+                                                        nameColor:(UIColor *)nameColor
+                                                     contentColor:(UIColor *)contentColor;
 
 /**
  创建评论模型
@@ -176,7 +181,9 @@ typedef NS_ENUM(NSInteger, VLevelType) {
                                             postID:(NSString *)postID
                                         responseID:(NSString *)responseID
                                      currentUserID:(NSString *)currentUserID
-                                   currentUserName:(NSString *)currentUserName;
+                                   currentUserName:(NSString *)currentUserName
+                                         nameColor:(UIColor *)nameColor
+                                      contentColor:(UIColor *)contentColor;
 
 /**
  创建回复模型

@@ -28,6 +28,23 @@
 @property (nonatomic, copy) void(^requestDataBlock)(MomentDataSourceType requestDataType);
 @property (nonatomic, copy) void(^clickVideoBlock)(NSURL *videoURL);
 
+@property (nonatomic, strong) UIImage *commentBackImage;
+@property (nonatomic, strong) UIImage *headerPlaceholdImage;
+@property (nonatomic, strong) UIImage *momentPlaceholdImage;
+@property (nonatomic, strong) UIColor *nameColor;
+@property (nonatomic, strong) UIColor *textColor;
+@property (nonatomic, strong) UIColor *watchMoreButtonColor;
+@property (nonatomic, strong) UIColor *addressColor;
+@property (nonatomic, strong) UIColor *timeColor;
+@property (nonatomic, strong) UIColor *viewColor;
+@property (nonatomic, strong) UIColor *headerLayerColor;
+@property (nonatomic, assign) CGFloat headerborderWidth;
+@property (nonatomic, strong) UIColor *separatorColor;
+
+@property (nonatomic, strong) UIColor *sendButtonBackColor;
+@property (nonatomic, strong) UIColor *sendButtonTinColor;
+@property (nonatomic, strong) UIColor *sendButtonBorderColor;
+
 - (void)setMomentDataArray:(NSArray <JCMomentsModel *> *) momentArray
             dataSourceType:(MomentDataSourceType) dataSourceType;
 ///删除帖子

@@ -15,6 +15,7 @@
 #import "JCMomentLocation.h"
 #import "YYKit.h"
 #import "JCCommentCell.h"
+#import "NSBundle+JCMoment.h"
 
 @interface JCMomentCell ()<UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *commentPopConstraint;
@@ -59,6 +60,8 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *reportViewHeight;  //训练报告高度
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *reportViewTopConstraint;
 
+@property (assign, nonatomic) BOOL alreadySetCommentBackImage;
+
 @end
 
 @implementation JCMomentCell
@@ -69,7 +72,8 @@
 }
 
 - (void)initCode{
-    [_commentTableview registerNib:[UINib nibWithNibName:@"JCCommentCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"JCCommentCell"];
+    NSBundle *xibBundle = [NSBundle bundleForClass:[self class]];
+    [_commentTableview registerNib:[UINib nibWithNibName:@"JCCommentCell" bundle:xibBundle] forCellReuseIdentifier:@"JCCommentCell"];
     _popCommentView.layer.cornerRadius = 4;
     _popCommentView.layer.masksToBounds = YES;
     [self drawLineWithView:_popCommentView
@@ -90,6 +94,9 @@
     _creatTimeLabel.textColor = kPostTimeColor;
     _viewCountLabel.textColor = kWatchCountColor;
     
+    UIImage *backImage = [[UIImage imageNamed:@"find_friend_comment_list.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10,25,0,0) resizingMode:UIImageResizingModeStretch];
+    _commentBackImageView.image = backImage;
+    
     UITapGestureRecognizer *headerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(headerTapAction:)];
     [_headerImage addGestureRecognizer:headerTap];
     [self addNitice];
@@ -102,10 +109,97 @@
     _likeListLabel.numberOfLines = 0;
     _likeListLabel.displaysAsynchronously = YES;
     _likeListLabel.textAlignment = NSTextAlignmentCenter;
-    
-    UIImage *backgroundImage = [UIImage imageNamed:@"find_friend_comment_list.png"];
-    backgroundImage = [backgroundImage resizableImageWithCapInsets:UIEdgeInsetsMake(10,25,0,0) resizingMode:UIImageResizingModeStretch];
-    _commentBackImageView.image = backgroundImage;
+    [self localized];
+}
+
+- (void)localized{
+    [self.watchTextMoreBtn setTitle:[NSBundle JCLocalizedStringForKey:@"ReadAll"] forState:UIControlStateNormal];
+    [self.watchTextMoreBtn setTitle:[NSBundle JCLocalizedStringForKey:@"PackUp"] forState:UIControlStateSelected];
+    [_likeBtn setTitle:[NSBundle JCLocalizedStringForKey:@"Like"] forState:UIControlStateNormal];
+    [_commentBtn setTitle:[NSBundle JCLocalizedStringForKey:@"Comment"] forState:UIControlStateNormal];
+}
+
+-(void)setNameColor:(UIColor *)nameColor{
+    if (_nameColor || !nameColor) {
+        return;
+    }
+    _nameColor = nameColor;
+    _nameLabel.textColor = nameColor;
+}
+
+-(void)setTextColor:(UIColor *)textColor{
+    if (_textColor || !textColor) {
+        return;
+    }
+    _textColor = textColor;
+    _momentTextLabel.textColor = textColor;
+}
+
+-(void)setWatchMoreButtonColor:(UIColor *)watchMoreButtonColor{
+    if (_watchMoreButtonColor || !watchMoreButtonColor) {
+        return;
+    }
+    _watchMoreButtonColor = watchMoreButtonColor;
+    [_watchTextMoreBtn setTitleColor:watchMoreButtonColor forState:UIControlStateNormal];
+    [_watchTextMoreBtn setTitleColor:watchMoreButtonColor forState:UIControlStateSelected];
+}
+
+-(void)setAddressColor:(UIColor *)addressColor{
+    if (_addressColor || !addressColor) {
+        return;
+    }
+    _addressLabel.textColor = addressColor;
+    _addressColor = addressColor;
+}
+
+-(void)setTimeColor:(UIColor *)timeColor{
+    if (_timeColor || !timeColor) {
+        return;
+    }
+    _creatTimeLabel.textColor = timeColor;
+    _timeColor = timeColor;
+}
+
+-(void)setViewColor:(UIColor *)viewColor{
+    if (_viewColor || !viewColor) {
+        return;
+    }
+    _viewCountLabel.textColor = viewColor;
+    _viewColor = viewColor;
+}
+
+- (void)setHeaderLayerColor:(UIColor *)headerLayerColor{
+    if (_headerLayerColor || !headerLayerColor) {
+        return;
+    }
+    _headerImage.layer.borderColor = headerLayerColor.CGColor;
+    _headerLayerColor = headerLayerColor;
+}
+
+- (void)setHeaderborderWidth:(CGFloat)headerborderWidth{
+    if (_headerborderWidth != headerborderWidth) {
+        _headerImage.layer.borderWidth = headerborderWidth;
+        _headerborderWidth = headerborderWidth;
+    }
+}
+
+- (void)setCommentCutLineBackColor:(UIColor *)commentCutLineBackColor{
+    if (_commentCutLineBackColor || !commentCutLineBackColor) {
+        return;
+    }
+    _commentCutLineBackColor = commentCutLineBackColor;
+    _cutLine.backgroundColor = commentCutLineBackColor;
+}
+
+- (void)setCommentBackImage:(UIImage *)commentBackImage{
+    if (_alreadySetCommentBackImage || !commentBackImage) {
+        return;
+    }
+    UIImage *backImage = [commentBackImage resizableImageWithCapInsets:UIEdgeInsetsMake(10,25,0,0) resizingMode:UIImageResizingModeStretch];
+    _commentBackImageView.image = backImage;
+    _commentBackImage = commentBackImage;
+    _alreadySetCommentBackImage = YES;
+
 }
 
 - (void)addNitice{
@@ -137,14 +231,16 @@
  */
 - (void)setModel:(JCMomentsModel *)model
        indexPath:(NSIndexPath *)indexPath
-        delegate:(id<JCMomentCellDelegate>)delegate{
+        delegate:(id<JCMomentCellDelegate>)delegate
+headerPlaceholdImage:(UIImage *)headerPlaceholdImage
+momentPlaceholdImage:(UIImage *)momentPlaceholdImage{
     _model = model;
     _indexPath = indexPath;
     _delegate = delegate;
     model.indexPath = indexPath;
     _nameLabel.text = model.userName;
     [_headerImage sd_setImageWithURL:[NSURL URLWithString:model.icon]
-                    placeholderImage:kPlaceholdImage
+                    placeholderImage:headerPlaceholdImage?headerPlaceholdImage:kPlaceholdImage
                            completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
                                
                            }];
@@ -159,15 +255,15 @@
         _addressLabel.text = model.address;
     }else{
         if (model.latitude) {
-            _addressLabel.text = @"位置获取中...";
+            _addressLabel.text = [NSBundle JCLocalizedStringForKey:@"LocationAcquisition"];
             _addressTopConstraint.constant = 10;
             __weak typeof(self)weakSelf = self;
             [[JCMomentLocation new] reverseGeocodeLocationWithLatitude:model.latitude
-                                                       longitude:model.longitude
-                                                        complete:^(NSString *addrssString) {
-                                                            model.address = addrssString;
-                                                            weakSelf.addressLabel.text = addrssString;
-                                                        }];
+                                                             longitude:model.longitude
+                                                              complete:^(NSString *addrssString) {
+                                                                  model.address = addrssString;
+                                                                  weakSelf.addressLabel.text = addrssString;
+                                                              }];
         }else{
             _addressTopConstraint.constant = 2;
         }
@@ -188,7 +284,7 @@
         _watchTextMoreBtn.hidden = YES;
     }
     //图片区域/视频区域
-    [_imagesBoardView setModelData:model];
+    [_imagesBoardView setModelData:model placeHoldImage:momentPlaceholdImage?momentPlaceholdImage:kPlaceholdImage];
     _imagesBoardView.clickVideoBlock = _clickVideoBlock;
     if (model.images.count == 0) {
         _addressTopConstraint.constant = 0;

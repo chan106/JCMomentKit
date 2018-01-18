@@ -12,6 +12,6 @@
 @interface JCMomentImageView : UIView
 
 @property (nonatomic, copy) void(^clickVideoBlock)(NSURL *videoURL);
-- (void)setModelData:(JCMomentsModel *)model;
+- (void)setModelData:(JCMomentsModel *)model placeHoldImage:(UIImage *)placeHoldImage;
 
 @end
