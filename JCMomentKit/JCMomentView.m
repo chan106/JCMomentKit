@@ -42,7 +42,6 @@
     [self addSubview:_tableView];
     _tableView.dataSource = self;
     _tableView.delegate = self;
-    _tableView.backgroundColor = [UIColor clearColor];
     _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     NSBundle *xibBundle = [NSBundle bundleForClass:[self class]];
     [_tableView registerNib:[UINib nibWithNibName:@"JCMomentCell" bundle:xibBundle] forCellReuseIdentifier:@"JCMomentCell"];
@@ -68,6 +67,7 @@
 - (void)drawRect:(CGRect)rect{
     [super drawRect:rect];
     _tableView.frame = self.bounds;
+    _tableView.backgroundColor = [UIColor clearColor];
     if (_inputView == nil) {
         _inputView = [[JCMomentCommentInputView alloc] initWithFrame:CGRectMake(0, kJCMomentScreenHeight, self.frame.size.width, kInputViewMinHeight)];
         [_inputView sendButtonBackColor:_sendButtonBackColor tinColor:_sendButtonTinColor borderColor:_sendButtonBorderColor];
@@ -155,7 +155,7 @@
     NSDictionary *userInfo = [notification userInfo];
     NSValue *value = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
     CGRect keyboardRect = [value CGRectValue];
-//    int height = keyboardRect.size.height - 49;//这里弹出有BUG，需要更改
+    //    int height = keyboardRect.size.height - 49;//这里弹出有BUG，需要更改
     int height = keyboardRect.size.height;
     CGFloat time = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
     [_inputView updateFrame:CGRectMake(0, kJCMomentScreenHeight - height - kInputViewMinHeight, self.frame.size.width, kInputViewMinHeight) withTime:time];
@@ -287,17 +287,17 @@
         actionType == MomentTapActionTypeMenuButton ||
         actionType == MomentTapActionTypeLike ||
         actionType == MomentTapActionTypeWatchReport) {
-//        点击头像
-//        点击昵称
-//        点击文本文字
-//        点击右上角菜单
-//        点赞动作
-//        查看训练报告
+        //        点击头像
+        //        点击昵称
+        //        点击文本文字
+        //        点击右上角菜单
+        //        点赞动作
+        //        查看训练报告
         if (_delegate && [_delegate respondsToSelector:@selector(didTapAction:actionType:momentMode:indexPath:inputString:)]) {
             [_delegate didTapAction:self actionType:actionType momentMode:momentModel indexPath:responseIndex inputString:nil];
         }
     }else if (actionType == MomentTapActionTypeMoreButton){
-//        查看更多文字
+        //        查看更多文字
         [UIView performWithoutAnimation:^{
             [self.tableView reloadRowAtIndexPath:momentModel.indexPath withRowAnimation:UITableViewRowAnimationAutomatic];
         }];
@@ -305,7 +305,7 @@
             [_delegate didTapAction:self actionType:MomentTapActionTypeMoreButton momentMode:momentModel indexPath:nil inputString:nil];
         }
     }else if (actionType == MomentTapActionTypeComment){
-//        点击评论
+        //        点击评论
         [_inputView editState:YES];
         NSString *placeHold = [NSString stringWithFormat:@"@%@",momentModel.userName];
         [_inputView setPlaceHoldString:placeHold];
@@ -321,7 +321,7 @@
             }
         };
     }else if (actionType == MomentTapActionTypeReplayComment){
-//        回复评论
+        //        回复评论
         [_inputView editState:YES];
         NSString *placeHold = [NSString stringWithFormat:@"@%@",momentModel.responseList[responseIndex.row].rUserName];
         [_inputView setPlaceHoldString:placeHold];
@@ -369,13 +369,14 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end
+
