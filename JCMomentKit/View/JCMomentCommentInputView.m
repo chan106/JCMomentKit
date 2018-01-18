@@ -83,6 +83,7 @@
     _sendButton.enabled = NO;
     [_sendButton setTitleColor:_sendButtonTinColor forState:UIControlStateNormal];
     [_sendButton setTitle:[NSBundle JCLocalizedStringForKey:@"Send"] forState:UIControlStateNormal];
+    [_sendButton addTarget:self action:@selector(sendAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_sendButton];
 }
 
@@ -169,9 +170,9 @@
     return YES;
 }
 
-- (IBAction)sendAction:(UIButton *)sender {
+- (void)sendAction:(UIButton *)sender {
     if (_inputView.text.length >= 1000) {
-//        [self.hud showString:@"不能超过1000字" dimissAfterSecond:1];
+        //        [self.hud showString:@"不能超过1000字" dimissAfterSecond:1];
     }else{
         [_inputView resignFirstResponder];
         [self editDone];
@@ -191,3 +192,4 @@
 }
 
 @end
+
