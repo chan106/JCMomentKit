@@ -54,6 +54,14 @@
     [self addRefresh];
 }
 
+- (void)viewWillAppear{
+    [self addNotice];
+}
+
+- (void)viewWillDisAppear{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)setSeparatorColor:(UIColor *)separatorColor{
     _separatorColor = separatorColor;
     _tableView.separatorColor = separatorColor;

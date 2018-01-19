@@ -65,4 +65,7 @@
                             responseID:(NSString *) responseID
                        responseContent:(NSString *) responseContent;
 
+- (void)viewWillAppear;
+- (void)viewWillDisAppear;
+
 @end
