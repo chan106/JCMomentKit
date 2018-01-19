@@ -141,7 +141,11 @@ static JCMomentLocation *_manager;
                 NSString *city=[addressDic objectForKey:@"City"];
 //                NSString *subLocality=[addressDic objectForKey:@"SubLocality"];
 //                NSString *street=[addressDic objectForKey:@"Street"];
-                address = [NSString stringWithFormat:@"%@·%@", state, city];
+                if (state) {
+                    address = [NSString stringWithFormat:@"%@·%@", state, city];
+                }else{
+                    address = [NSString stringWithFormat:@"%@", city];
+                }
             }
         }
 //        NSLog(@"经纬度反编译的所在城市====%@", address);
