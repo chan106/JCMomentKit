@@ -81,6 +81,8 @@ typedef NS_ENUM(NSInteger, VLevelType) {
 @property (nonatomic, assign) BOOL isMyMoment;              //是否是我发的帖子
 @property (nonatomic, strong) NSIndexPath *indexPath;       //索引
 @property (nonatomic, assign) BOOL isHandpicked;            //是否是精选
+@property (nonatomic, strong) UIColor *nameColor;
+@property (nonatomic, strong) UIColor *contentColor;
 
 /**
  创建帖子数据模型

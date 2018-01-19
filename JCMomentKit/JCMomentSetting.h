@@ -64,6 +64,6 @@
 #define     kNoticeCancelAllEdit            @"JCMomentCancelAllEdit"
 #define     kNoticeWatchUserInfo            @"JCMomentWatchUserInfoClick"
 
-#define     kPlaceholdImage             [UIImage imageNamed:@"placehold_image.png"]
+#define     kMomentPlaceholdImage           [UIImage imageWithContentsOfFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"placehold_image@3x.png" ofType:@""]]
 
 #endif /* JCMomentSetting_h */

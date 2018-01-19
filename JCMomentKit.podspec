@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 s.name         = 'JCMomentKit'
 s.summary      = 'A PYQ of iOS components.'
-s.version      = '1.0.2'
+s.version      = '1.0.3'
 s.license      = { :type => 'MIT', :file => 'LICENSE' }
 s.authors      = { 'Guo.JC' => 'ji.chan@foxmail.com' }
 

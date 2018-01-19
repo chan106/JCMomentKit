@@ -218,8 +218,8 @@
                                                                             responseID:responseID
                                                                          currentUserID:moment.currentUserID
                                                                        currentUserName:moment.currentUserName
-                                                                             nameColor:self.nameColor
-                                                                          contentColor:self.textColor];
+                                                                             nameColor:moment.nameColor
+                                                                          contentColor:moment.contentColor];
     [moment addCommentModel:newComment];
     [_tableView reloadData];
 }
@@ -249,7 +249,11 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     JCMomentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"JCMomentCell" forIndexPath:indexPath];
     JCMomentsModel *model = _momentModels[indexPath.row];
-    [cell setModel:model indexPath:indexPath delegate:self headerPlaceholdImage:_headerPlaceholdImage momentPlaceholdImage:_momentPlaceholdImage];
+    [cell setModel:model
+         indexPath:indexPath
+          delegate:self
+headerPlaceholdImage:_headerPlaceholdImage
+momentPlaceholdImage:_momentPlaceholdImage];
     cell.clickVideoBlock = _clickVideoBlock;
     cell.commentBackImage = _commentBackImage;
     cell.nameColor = _nameColor;

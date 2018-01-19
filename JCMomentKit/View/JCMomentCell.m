@@ -116,6 +116,7 @@
     [self.watchTextMoreBtn setTitle:[NSBundle JCLocalizedStringForKey:@"ReadAll"] forState:UIControlStateNormal];
     [self.watchTextMoreBtn setTitle:[NSBundle JCLocalizedStringForKey:@"PackUp"] forState:UIControlStateSelected];
     [_likeBtn setTitle:[NSBundle JCLocalizedStringForKey:@"Like"] forState:UIControlStateNormal];
+    [_likeBtn setTitle:[NSBundle JCLocalizedStringForKey:@"UnLike"] forState:UIControlStateSelected];
     [_commentBtn setTitle:[NSBundle JCLocalizedStringForKey:@"Comment"] forState:UIControlStateNormal];
 }
 
@@ -240,7 +241,7 @@ momentPlaceholdImage:(UIImage *)momentPlaceholdImage{
     model.indexPath = indexPath;
     _nameLabel.text = model.userName;
     [_headerImage sd_setImageWithURL:[NSURL URLWithString:model.icon]
-                    placeholderImage:headerPlaceholdImage?headerPlaceholdImage:kPlaceholdImage
+                    placeholderImage:headerPlaceholdImage?headerPlaceholdImage:kMomentPlaceholdImage
                            completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
                                
                            }];
@@ -284,7 +285,7 @@ momentPlaceholdImage:(UIImage *)momentPlaceholdImage{
         _watchTextMoreBtn.hidden = YES;
     }
     //图片区域/视频区域
-    [_imagesBoardView setModelData:model placeHoldImage:momentPlaceholdImage?momentPlaceholdImage:kPlaceholdImage];
+    [_imagesBoardView setModelData:model placeHoldImage:momentPlaceholdImage?momentPlaceholdImage:kMomentPlaceholdImage];
     _imagesBoardView.clickVideoBlock = _clickVideoBlock;
     if (model.images.count == 0) {
         _addressTopConstraint.constant = 0;
@@ -319,7 +320,7 @@ momentPlaceholdImage:(UIImage *)momentPlaceholdImage{
     //    _menuBtn.hidden = !model.isMyMoment;
     _menuBtn.hidden = NO;
     //V认证
-    [_imageV sd_setImageWithURL:[NSURL URLWithString:model.vImageURL] placeholderImage:kPlaceholdImage];
+    [_imageV sd_setImageWithURL:[NSURL URLWithString:model.vImageURL] placeholderImage:kMomentPlaceholdImage];
     if (model.vLevelType == VLevelTypePersonUser) {
         _imageV.hidden = YES;
     }else{
@@ -330,7 +331,7 @@ momentPlaceholdImage:(UIImage *)momentPlaceholdImage{
         _reportViewHeight.constant = 40;
         _reportViewTopConstraint.constant = 10;
         _reportView.hidden = NO;
-        [_reportImage sd_setImageWithURL:[NSURL URLWithString:model.reportImage] placeholderImage:kPlaceholdImage];
+        [_reportImage sd_setImageWithURL:[NSURL URLWithString:model.reportImage] placeholderImage:kMomentPlaceholdImage];
         _reportTitleLabel.text = model.reportTitle;
     }else{
         _reportViewHeight.constant =

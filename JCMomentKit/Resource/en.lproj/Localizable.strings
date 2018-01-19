@@ -6,6 +6,7 @@
   Copyright © 2018年 KOOSPUR. All rights reserved.
 */
 "Like" = "Like";
+"UnLike" = "Cancel";
 "Comment" = "Comment";
 "Report" = "Report";
 "Cancel" = "Cancel";
@@ -18,8 +19,12 @@
 "SaveImage" = "Save Image";
 "SaveSuccess" = "Save Success";
 "SaveFail" = "Save Fail";
-"Reply" = "Reply";
-"IdentifyTheQrCode" = "Identify The QR Code";
+"Reply" = " Reply ";
+"IdentifyTheQrCode" = "Extract QR code";
+// 扫描结果
+"Scanning Result" = "Scanning result";
+// 您还没有生成二维码
+"You have not generated a QR code yet" = "You have not generated a QR code yet";
 "ReadAll" = "Read All";
 "PackUp" = "Pack Up";
 "LocationAcquisition" = "Location Acquisition...";

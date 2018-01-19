@@ -226,7 +226,7 @@
 
 - (void)setImageView:(UIImageView *)imageView imageUrl:(NSURL *)url{
     [imageView sd_setImageWithURL:url
-                 placeholderImage:_placeHoldImage?_placeHoldImage:[UIImage imageNamed:@"placehold_image.png"]
+                 placeholderImage:_placeHoldImage?_placeHoldImage:kMomentPlaceholdImage
                         completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
         
                         }];

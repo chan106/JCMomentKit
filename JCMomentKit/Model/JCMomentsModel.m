@@ -16,9 +16,6 @@
 
 @interface JCMomentsModel ()
 
-@property (nonatomic, strong) UIColor *nameColor;
-@property (nonatomic, strong) UIColor *contentColor;
-
 @end
 
 @implementation JCMomentsModel
@@ -462,6 +459,7 @@
     NSString *userNameLink;
     NSString *commentText;
     NSMutableAttributedString *text;
+    NSString *replay = [NSBundle JCLocalizedStringForKey:@"Reply"];
     if (self.quote == nil) {
         ///是一条评论
         userNameLink = [NSString stringWithFormat:@"%@: ",self.rUserName];
@@ -469,7 +467,7 @@
         text  = [[NSMutableAttributedString alloc] initWithString:[userNameLink stringByAppendingString:commentText]];
     }else{
         ///是一条回复
-        userNameLink = [NSString stringWithFormat:@"%@%@%@: ",self.rUserName,[NSBundle JCLocalizedStringForKey:@"Reply"],self.quote.userName];
+        userNameLink = [NSString stringWithFormat:@"%@%@%@: ",self.rUserName,replay,self.quote.userName];
         commentText = self.text;
         text  = [[NSMutableAttributedString alloc] initWithString:[userNameLink stringByAppendingString:commentText]];
     }
@@ -477,7 +475,7 @@
     text.font = [UIFont systemFontOfSize:kTextFont];
     text.color = self.contentColor;
     [text addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:kTextFont] range:NSMakeRange(0, self.rUserName.length)];
-    [text addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:kTextFont] range:NSMakeRange(self.rUserName.length+2, self.quote.userName.length)];
+    [text addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:kTextFont] range:NSMakeRange(self.rUserName.length+(replay.length), self.quote.userName.length)];
     self.commentString = text;
     
     __weak typeof(self)weakSelf = self;
@@ -497,7 +495,7 @@
                                          tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
                                              [[NSNotificationCenter defaultCenter] postNotificationName:kNoticeWatchUserInfo object:nil userInfo:@{@"userID":weakSelf.rUserID}];
                                          }];
-        [self.commentString setTextHighlightRange:NSMakeRange(self.rUserName.length+2, self.quote.userName.length)
+        [self.commentString setTextHighlightRange:NSMakeRange(self.rUserName.length+(replay.length), self.quote.userName.length)
                                              color:self.nameColor
                                    backgroundColor:[UIColor grayColor]
                                          tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
@@ -561,6 +559,8 @@
     quoto.userID = commentModel.rUserID;
     quoto.userName = commentModel.rUserName;
     model.quote = quoto;
+    model.nameColor = commentModel.momentModel.nameColor;
+    model.contentColor = commentModel.momentModel.contentColor;
     [model caucalCommentHeight];
     return model;
 }
