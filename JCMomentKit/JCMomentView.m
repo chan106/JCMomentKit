@@ -17,6 +17,7 @@
 @property (nonatomic, strong) NSMutableArray <JCMomentsModel *> *momentModels;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) JCMomentCommentInputView *inputView;
+@property (nonatomic, assign) BOOL isAllowPopInputView;
 
 @end
 
@@ -50,16 +51,10 @@
     _tableView.estimatedSectionHeaderHeight = 0;
     _tableView.estimatedSectionFooterHeight = 0;
     
+    _isAllowPopInputView = NO;
+    
     [self addNotice];
     [self addRefresh];
-}
-
-- (void)viewWillAppear{
-    [self addNotice];
-}
-
-- (void)viewWillDisAppear{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)setSeparatorColor:(UIColor *)separatorColor{
@@ -166,7 +161,9 @@
     //    int height = keyboardRect.size.height - 49;//这里弹出有BUG，需要更改
     int height = keyboardRect.size.height;
     CGFloat time = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-    [_inputView updateFrame:CGRectMake(0, kJCMomentScreenHeight - height - kInputViewMinHeight, self.frame.size.width, kInputViewMinHeight) withTime:time];
+    if (_isAllowPopInputView) {
+        [_inputView updateFrame:CGRectMake(0, kJCMomentScreenHeight - height - kInputViewMinHeight, self.frame.size.width, kInputViewMinHeight) withTime:time];
+    }
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification{
@@ -178,6 +175,7 @@
     CGFloat time = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
     [_inputView updateFrame:CGRectMake(0, kJCMomentScreenHeight, self.frame.size.width, kInputViewMinHeight)
                    withTime:time];
+    _isAllowPopInputView = NO;
 }
 
 - (void)deleteMoment:(JCMomentsModel *)deleteMoment{
@@ -318,6 +316,7 @@ momentPlaceholdImage:_momentPlaceholdImage];
         }
     }else if (actionType == MomentTapActionTypeComment){
         //        点击评论
+        _isAllowPopInputView = YES;
         [_inputView editState:YES];
         NSString *placeHold = [NSString stringWithFormat:@"@%@",momentModel.userName];
         [_inputView setPlaceHoldString:placeHold];
@@ -334,6 +333,7 @@ momentPlaceholdImage:_momentPlaceholdImage];
         };
     }else if (actionType == MomentTapActionTypeReplayComment){
         //        回复评论
+        _isAllowPopInputView = YES;
         [_inputView editState:YES];
         NSString *placeHold = [NSString stringWithFormat:@"@%@",momentModel.responseList[responseIndex.row].rUserName];
         [_inputView setPlaceHoldString:placeHold];
